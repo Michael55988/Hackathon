@@ -1,8 +1,8 @@
-# import et connexion à la BD
+# import et connexion a la BD
 import os
 import sqlite3
 
-# Codes ANSI pour colorer ton CLI
+# Codes ANSI pour colorer
 class Ansi:
     RESET   = '\033[0m'
     BOLD    = '\033[1m'
@@ -16,7 +16,7 @@ class Ansi:
     MAGENTA = '\033[35m'
     CYAN    = '\033[36m'
 
-# Connexion et création des tables si nécessaire
+# Connexion et creation des tables si  besoin
 def init_db(db_name="pawn_to_king.db"):
     base_dir = os.path.dirname(__file__)
     script_path = os.path.join(base_dir, "pawn_to_king.sql")
@@ -28,13 +28,13 @@ def init_db(db_name="pawn_to_king.db"):
         conn.executescript(f.read())
     return conn
 
-# Démarrer une nouvelle partie
+# commencer une nouvelle partie
 def start_new_game(conn):
     cur = conn.cursor()
     cur.execute("INSERT INTO games DEFAULT VALUES")
     game_id = cur.lastrowid
 
-    # Position de départ : rangées 1,2 pour white ; 7,8 pour black
+    # Position de depart : rangees 1,2 pour white ; 7,8 pour black
     setup = [
         ("rook",1,1),("knight",1,2),("bishop",1,3),("queen",1,4),
         ("king",1,5),("bishop",1,6),("knight",1,7),("rook",1,8),
@@ -63,7 +63,7 @@ def load_board_from_db(conn, game_id):
         board[8-row][col-1] = symbol if color=='white' else symbol.lower()
     return board
 
-# Afficher le plateau (avec indentation et couleurs ANSI)
+# Afficher le plateau 
 def show_board(board, indent=4):
     margin = " " * indent
     header = "".join(f"{Ansi.BOLD}{Ansi.BLUE}{c}{Ansi.RESET} " for c in "abcdefgh")
@@ -84,7 +84,7 @@ def show_board(board, indent=4):
         print(margin + row_label + " " + "".join(cells))
     print()
 
-# Transformer une saisie utilisateur en coordonnées
+# modifie une saisie utilisateur en coordonnees
 def transform_input(moove):
     try:
         depart, arrivee = moove.split()
@@ -98,7 +98,7 @@ def transform_input(moove):
     except Exception:
         raise ValueError("Invalid move format.")
 
-# Vérifier si un mouvement est valide
+# verifier si un mouvement est valide
 # ADDITIONAL: using python_chess
 # import chess
 
@@ -206,7 +206,7 @@ def play_game():
     conn = init_db("pawn_to_king.db")
     game_id = start_new_game(conn)
 
-    # Demander immédiatement si c'est un jeu ou un tutoriel
+    # Demander imediatement si cest un jeu ou un tutoriel
     mode = input("Play against a friend (p) or learn through tutorial (t)? ")
 
     if mode.lower() == 't':
